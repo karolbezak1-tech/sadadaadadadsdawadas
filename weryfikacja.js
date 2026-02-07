@@ -17,11 +17,14 @@ module.exports = {
                     .setTitle('WERYFIKACJA UŻYTKOWNIKA')
                     .setDescription('Kliknij reakcję ✅ poniżej, aby otrzymać dostęp do reszty kanałów.')
                     .setColor('#FFFFFF') // Biały kolor
-                    .setImage('TUTAJ_WKLEJ_LINK_DO_ZDJECIA') // Wpisz link do zdjęcia między cudzysłów
-                    .setFooter({ text: 'System Weryfikacji' })
+                    .setImage('https://cdn.discordapp.com/attachments/1469777712028713103/1469778783555813650/image.png?ex=6988e5a9&is=69879429&hm=d1771cb64bd90d69865522eb0bedb44019c43224416de73d233e54688c454081') // Wklej link do zdjęcia
+                    .setFooter({ text: 'System Weryfikacji | LuckyReps' })
                     .setTimestamp();
 
-                await interaction.reply({ content: 'Panel został wysłany!', ephemeral: true });
+                // Odpowiedź widoczna tylko dla Ciebie (ukrywa użycie komendy przed innymi)
+                await interaction.reply({ content: '> **Panel został wysłany!**', ephemeral: true });
+
+                // Wysłanie czystego panelu na kanał
                 const message = await interaction.channel.send({ embeds: [embed] });
                 await message.react('✅');
             }
@@ -46,18 +49,9 @@ module.exports = {
 
             if (role && member) {
                 try {
+                    // Bot tylko nadaje rolę, nie wysyła wiadomości PV
                     await member.roles.add(role);
-                    
-                    // Profesjonalna biała wiadomość PV
-                    const dmEmbed = new EmbedBuilder()
-                        .setTitle('Weryfikacja zakończona sukcesem!')
-                        .setDescription(`Otrzymałeś dostęp do serwera **${guild.name}**.`)
-                        .setColor('#FFFFFF')
-                        .setTimestamp();
-
-                    await member.send({ embeds: [dmEmbed] }).catch(() => {
-                        console.log(`Nie udało się wysłać PV do ${user.tag} (zablokowane wiadomości).`);
-                    });
+                    console.log(`Pomyślnie zweryfikowano: ${user.tag}`);
                 } catch (e) {
                     console.error('Błąd podczas nadawania roli:', e);
                 }
