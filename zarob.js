@@ -17,7 +17,7 @@ module.exports = {
                         `Chcesz zarobić łatwe pieniądze lub dostać bonus do swojego zamówienia? Mamy dla Ciebie prostą ofertę w ramach współpracy z **Kakobuy**!\n\n` +
                         `**Jak odebrać 15 PLN?**\n` +
                         `1️⃣ Zarejestruj konto z naszego oficjalnego linku:\n` +
-                        `🔗 **[https://ikako.vip/r/luckyy](https://ikako.vip/r/luckyy)**\n\n` +
+                        `🔗 **https://ikako.vip/r/luckyy**\n\n` +
                         `2️⃣ Opłać swoją pierwszą paczkę (dostawę) za minimum **100 PLN**.\n\n` +
                         `3️⃣ Po opłaceniu paczki zgłoś się do nas po odbiór nagrody!\n\n` +
                         `**Nagroda do wyboru:**\n` +
