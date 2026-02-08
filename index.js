@@ -2,18 +2,18 @@ const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const express = require('express');
 require('dotenv').config();
 
-// Inicjalizacja klienta bota z niezbędnymi uprawnieniami
+// Inicjalizacja klienta bota z pełnym zestawem uprawnień
 const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds,           // Obsługa serwerów
-        GatewayIntentBits.GuildMembers,     // Zarządzanie członkami (nadawanie ról)
-        GatewayIntentBits.GuildMessageReactions, // Czytanie reakcji ✅
-        GatewayIntentBits.GuildMessages,    // Czytanie wiadomości
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMessages,
     ],
     partials: [
-        Partials.Message,   // Wymagane, by czytać reakcje pod wiadomościami sprzed restartu
-        Partials.Reaction,  // Wymagane do obsługi reakcji
-        Partials.User       // Wymagane do poprawnego identyfikowania użytkowników
+        Partials.Message,
+        Partials.Reaction,
+        Partials.User
     ]
 });
 
@@ -23,46 +23,46 @@ const PORT = process.env.PORT || 8080;
 
 // --- SERWER WWW DLA UPTIME ROBOT (RENDER) ---
 const app = express();
+app.get('/', (req, res) => res.status(200).send('Bot Online'));
+app.listen(PORT, () => console.log(`[WEB] Nasłuchiwanie na porcie ${PORT}`));
 
-app.get('/', (req, res) => {
-    res.status(200).send('System operacyjny bota: Aktywny');
-});
+// --- ŁADOWANIE MODUŁÓW (SILNIK BOTA) ---
 
-app.listen(PORT, () => {
-    console.log(`[WEB] Serwer HTTP nasłuchuje na porcie ${PORT}`);
-});
-
-// --- ŁADOWANIE MODUŁÓW ---
-
-// 1. Ładowanie logiki weryfikacji
+// 1. Logika Weryfikacji
 try {
-    const verification = require('./weryfikacja.js');
-    verification.init(client);
-    console.log('[MODUŁ] Logika weryfikacji została załadowana.');
+    require('./weryfikacja.js').init(client);
+    console.log('[MODUŁ] Weryfikacja załadowana.');
 } catch (error) {
-    console.error('[BŁĄD] Nie udało się załadować modułu weryfikacji:', error);
+    console.error('[BŁĄD] Moduł weryfikacji:', error);
 }
 
-// 2. Ładowanie statusu (Streamuje) - NOWE
+// 2. Status "Streamuje"
 try {
-    const statusModule = require('./status.js');
-    statusModule.init(client);
-    console.log('[MODUŁ] Status bota został załadowany.');
+    require('./status.js').init(client);
+    console.log('[MODUŁ] Status załadowany.');
 } catch (error) {
-    console.error('[BŁĄD] Nie udało się załadować modułu statusu:', error);
+    console.error('[BŁĄD] Moduł statusu:', error);
+}
+
+// 3. Regulamin Społeczności
+try {
+    require('./regulamin.js').init(client);
+    console.log('[MODUŁ] Regulamin załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł regulaminu:', error);
 }
 
 // --- EVENTY GŁÓWNE ---
 client.once('ready', () => {
     console.log('---------------------------------------');
-    console.log(`[BOT] Zalogowano pomyślnie jako: ${client.user.tag}`);
-    console.log(`[BOT] Gotowy do działania.`);
+    console.log(`[BOT] Zalogowano: ${client.user.tag}`);
+    console.log(`[BOT] Systemy LuckyReps aktywne.`);
     console.log('---------------------------------------');
 });
 
-// Obsługa błędów, aby bot nie wyłączył się przy drobnym problemie
+// Zabezpieczenie przed crashowaniem bota
 process.on('unhandledRejection', error => {
-    console.error('[BŁĄD API] Niezidentyfikowany błąd:', error);
+    console.error('[CRITICAL ERROR]:', error);
 });
 
 client.login(TOKEN);
