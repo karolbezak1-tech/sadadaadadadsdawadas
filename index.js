@@ -6,7 +6,7 @@ require('dotenv').config();
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMembers,         // Wymagane dla witamy.js (event guildMemberAdd)
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessages,
     ],
@@ -50,6 +50,14 @@ try {
     console.log('[MODUŁ] Regulamin załadowany.');
 } catch (error) {
     console.error('[BŁĄD] Moduł regulaminu:', error);
+}
+
+// 4. System Powitań (NOWE)
+try {
+    require('./witamy.js').init(client);
+    console.log('[MODUŁ] System powitań załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł powitań:', error);
 }
 
 // --- EVENTY GŁÓWNE ---
