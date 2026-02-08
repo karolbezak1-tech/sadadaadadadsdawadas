@@ -6,7 +6,7 @@ require('dotenv').config();
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,         // Wymagane dla witamy.js (event guildMemberAdd)
+        GatewayIntentBits.GuildMembers,         // Wymagane dla witamy.js
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessages,
     ],
@@ -52,7 +52,7 @@ try {
     console.error('[BŁĄD] Moduł regulaminu:', error);
 }
 
-// 4. System Powitań (NOWE)
+// 4. System Powitań
 try {
     require('./witamy.js').init(client);
     console.log('[MODUŁ] System powitań załadowany.');
@@ -60,16 +60,24 @@ try {
     console.error('[BŁĄD] Moduł powitań:', error);
 }
 
+// 5. System Zarabiania (NOWE)
+try {
+    require('./zarob.js').init(client);
+    console.log('[MODUŁ] System zarobkowy załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł zarobkowy:', error);
+}
+
 // --- EVENTY GŁÓWNE ---
 client.once('ready', () => {
     console.log('---------------------------------------');
     console.log(`[BOT] Zalogowano: ${client.user.tag}`);
-    console.log(`[BOT] Systemy LuckyReps aktywne.`);
+    console.log(`[BOT] Wszystkie systemy LuckyReps aktywne.`);
     console.log('---------------------------------------');
 });
 
 // Zabezpieczenie przed crashowaniem bota
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error) => {
     console.error('[CRITICAL ERROR]:', error);
 });
 
