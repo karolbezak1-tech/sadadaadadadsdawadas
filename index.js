@@ -6,7 +6,7 @@ require('dotenv').config();
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,           // Obsługa serwerów
-        GatewayIntentBits.GuildMembers,    // Zarządzanie członkami (nadawanie ról)
+        GatewayIntentBits.GuildMembers,     // Zarządzanie członkami (nadawanie ról)
         GatewayIntentBits.GuildMessageReactions, // Czytanie reakcji ✅
         GatewayIntentBits.GuildMessages,    // Czytanie wiadomości
     ],
@@ -33,7 +33,8 @@ app.listen(PORT, () => {
 });
 
 // --- ŁADOWANIE MODUŁÓW ---
-// Importujemy logikę z pliku weryfikacja.js
+
+// 1. Ładowanie logiki weryfikacji
 try {
     const verification = require('./weryfikacja.js');
     verification.init(client);
@@ -42,11 +43,20 @@ try {
     console.error('[BŁĄD] Nie udało się załadować modułu weryfikacji:', error);
 }
 
+// 2. Ładowanie statusu (Streamuje) - NOWE
+try {
+    const statusModule = require('./status.js');
+    statusModule.init(client);
+    console.log('[MODUŁ] Status bota został załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Nie udało się załadować modułu statusu:', error);
+}
+
 // --- EVENTY GŁÓWNE ---
 client.once('ready', () => {
     console.log('---------------------------------------');
     console.log(`[BOT] Zalogowano pomyślnie jako: ${client.user.tag}`);
-    console.log(`[BOT] Gotowy do obsługi weryfikacji.`);
+    console.log(`[BOT] Gotowy do działania.`);
     console.log('---------------------------------------');
 });
 
