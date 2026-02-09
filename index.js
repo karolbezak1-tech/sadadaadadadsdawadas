@@ -77,12 +77,20 @@ try {
     console.error('[BŁĄD] Moduł ticketów:', error);
 }
 
-// 7. Poradnik Wysyłek (NOWE)
+// 7. Poradnik Wysyłek
 try {
     require('./czymshipowacpaczki.js').init(client);
     console.log('[MODUŁ] Poradnik wysyłek załadowany.');
 } catch (error) {
     console.error('[BŁĄD] Moduł CSP:', error);
+}
+
+// 8. Panel Strony (NOWE)
+try {
+    require('./strona.js').init(client);
+    console.log('[MODUŁ] Panel strony załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł strony:', error);
 }
 
 // --- EVENTY GŁÓWNE ---
