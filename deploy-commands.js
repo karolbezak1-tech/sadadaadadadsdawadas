@@ -12,10 +12,15 @@ const commands = [
         .setName('regulamin-panel')
         .setDescription('Wysyła panel z regulaminem serwera'),
 
-    // 3. Panel Zarobkowy (NOWE)
+    // 3. Panel Zarobkowy
     new SlashCommandBuilder()
         .setName('zarob-panel')
-        .setDescription('Wysyła panel informujący o możliwości zarobku '),
+        .setDescription('Wysyła panel informujący o możliwości zarobku'),
+
+    // 4. Panel Ticketów (NOWE)
+    new SlashCommandBuilder()
+        .setName('ticket-panel')
+        .setDescription('Otwiera centrum pomocy i biletów (Admin)'),
 
 ].map(command => command.toJSON());
 
@@ -23,14 +28,14 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
     try {
-        console.log('Rozpoczynanie rejestracji komend slash (Weryfikacja, Regulamin, Zarobek)...');
+        console.log('Rozpoczynanie rejestracji komend slash (Weryfikacja, Regulamin, Zarobek, Tickety)...');
         
         await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands },
         );
         
-        console.log('Sukces! Wszystkie komendy zostały pomyślnie zarejestrowane w Discord API.');
+        console.log('Sukces! Wszystkie 4 komendy zostały pomyślnie zarejestrowane.');
     } catch (error) {
         console.error('Wystąpił błąd podczas rejestracji komend:', error);
     }
