@@ -69,7 +69,7 @@ try {
     console.error('[BŁĄD] Moduł zarobkowy:', error);
 }
 
-// 6. System Ticketów (NOWE)
+// 6. System Ticketów
 try {
     require('./ticket.js').init(client);
     console.log('[MODUŁ] System ticketów załadowany.');
@@ -77,11 +77,19 @@ try {
     console.error('[BŁĄD] Moduł ticketów:', error);
 }
 
+// 7. Poradnik Wysyłek (NOWE)
+try {
+    require('./czymshipowacpaczki.js').init(client);
+    console.log('[MODUŁ] Poradnik wysyłek załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł CSP:', error);
+}
+
 // --- EVENTY GŁÓWNE ---
 client.once('ready', () => {
     console.log('---------------------------------------');
     console.log(`[BOT] Zalogowano: ${client.user.tag}`);
-    console.log(`[BOT] Systemy biletowe i operacyjne aktywne.`);
+    console.log(`[BOT] LuckyReps Bot gotowy do działania.`);
     console.log('---------------------------------------');
 });
 
