@@ -22,10 +22,15 @@ const commands = [
         .setName('ticket-panel')
         .setDescription('Otwiera centrum pomocy i biletów (Admin)'),
 
-    // 5. Poradnik Wysyłek (NOWE)
+    // 5. Poradnik Wysyłek
     new SlashCommandBuilder()
         .setName('csp-panel')
         .setDescription('Wysyła poradnik o liniach wysyłkowych (Admin)'),
+
+    // 6. Panel Strony (NOWE)
+    new SlashCommandBuilder()
+        .setName('strona-panel')
+        .setDescription('Wysyła panel informacyjny o stronie LuckyReps (Admin)'),
 
 ].map(command => command.toJSON());
 
@@ -33,14 +38,14 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
     try {
-        console.log('Rozpoczynanie rejestracji komend slash (Pełna lista: 5 komend)...');
+        console.log('Rozpoczynanie rejestracji komend slash (Pełna lista: 6 komend)...');
         
         await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands },
         );
         
-        console.log('Sukces! Wszystkie komendy (w tym poradnik wysyłek) zostały zarejestrowane.');
+        console.log('Sukces! Wszystkie komendy (w tym panel strony) zostały zarejestrowane.');
     } catch (error) {
         console.error('Wystąpił błąd podczas rejestracji komend:', error);
     }
