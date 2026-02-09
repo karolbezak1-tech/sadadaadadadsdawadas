@@ -9,6 +9,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,         // Wymagane dla witamy.js
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,       // WYMAGANE dla ticket.js (do transkrypcji czatu)
     ],
     partials: [
         Partials.Message,
@@ -60,7 +61,7 @@ try {
     console.error('[BŁĄD] Moduł powitań:', error);
 }
 
-// 5. System Zarabiania (NOWE)
+// 5. System Zarabiania
 try {
     require('./zarob.js').init(client);
     console.log('[MODUŁ] System zarobkowy załadowany.');
@@ -68,11 +69,19 @@ try {
     console.error('[BŁĄD] Moduł zarobkowy:', error);
 }
 
+// 6. System Ticketów (NOWE)
+try {
+    require('./ticket.js').init(client);
+    console.log('[MODUŁ] System ticketów załadowany.');
+} catch (error) {
+    console.error('[BŁĄD] Moduł ticketów:', error);
+}
+
 // --- EVENTY GŁÓWNE ---
 client.once('ready', () => {
     console.log('---------------------------------------');
     console.log(`[BOT] Zalogowano: ${client.user.tag}`);
-    console.log(`[BOT] Wszystkie systemy LuckyReps aktywne.`);
+    console.log(`[BOT] Systemy biletowe i operacyjne aktywne.`);
     console.log('---------------------------------------');
 });
 
