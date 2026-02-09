@@ -187,11 +187,31 @@ module.exports = {
 
             // 4. OBSŁUGA ZAMYKANIA BILETU I TRANSKRYPCJA
             if (interaction.isButton() && interaction.customId === 'close_ticket') {
+                
+                // Lista ról uprawnionych do zamykania biletów (Admini, Helperzy, Finderzy)
+                const staffRoles = [
+                    '1469658211933093945', 
+                    '1469658211933093942', 
+                    '1470376926853075045'
+                ];
+
+                // Sprawdzamy, czy osoba klikająca przycisk ma którąś z tych ról
+                const isStaff = interaction.member.roles.cache.some(role => staffRoles.includes(role.id));
+
+                // Jeśli to NIE jest admin/staff, odrzucamy interakcję
+                if (!isStaff) {
+                    return interaction.reply({ 
+                        content: '❌ Tylko administracja LuckyReps może zamknąć ten bilet!', 
+                        ephemeral: true 
+                    });
+                }
+
                 const channel = interaction.channel;
                 
+                // Informujemy o rozpoczęciu procesu (widoczne tylko dla klikającego)
                 await interaction.reply({ content: 'Zamykanie biletu i generowanie transkryptu...', ephemeral: true });
 
-                // Pobieranie wiadomości do transkryptu
+                // Pobieranie wiadomości do transkryptu (ostatnie 100 wiadomości)
                 let messages = [];
                 try {
                     messages = await channel.messages.fetch({ limit: 100 });
@@ -201,7 +221,7 @@ module.exports = {
 
                 // Formatowanie treści pliku .txt
                 const transcriptContent = Array.from(messages.values())
-                    .reverse() // Od najstarszej do najnowszej
+                    .reverse() 
                     .map(m => `[${m.createdAt.toLocaleString()}] ${m.author.tag}: ${m.content} ${m.attachments.size > 0 ? '(Załącznik)' : ''}`)
                     .join('\n');
 
@@ -214,11 +234,12 @@ module.exports = {
                     const logEmbed = new EmbedBuilder()
                         .setTitle('🔴 Bilet Zamknięty')
                         .addFields(
-                            { name: 'Kanał', value: channel.name, inline: true },
-                            { name: 'Zamknął', value: interaction.user.tag, inline: true },
-                            { name: 'Data', value: `<t:${Math.floor(Date.now() / 1000)}:R>`, inline: true }
+                            { name: 'Kanał', value: `\`${channel.name}\``, inline: true },
+                            { name: 'Zamknął (Staff)', value: `${interaction.user.tag}`, inline: true },
+                            { name: 'Data', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
                         )
-                        .setColor('#FF0000');
+                        .setColor('#FF0000')
+                        .setFooter({ text: 'System Logów LuckyReps' });
                     
                     await logChannel.send({ embeds: [logEmbed], files: [attachment] });
                 }
